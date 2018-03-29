@@ -1,0 +1,257 @@
+/***************************************************************************************************
+Purpose:
+	文件变化监听接口文件。
+
+Author:
+	Chaos
+
+Creating Time:
+	2016-8-18
+
+***************************************************************************************************/
+
+#include "nsISupports.idl"
+
+native bool (bool);
+native int (int);
+native int64 (int64);
+native ncTaskSrc (ncTaskSrc);
+[ref] native StringRef (String);
+
+%{ C++
+
+#include <syncmgr/private/ncISyncTask.h>
+
+%}
+
+[uuid(85DF8C5F-C3F1-4d43-81A1-A021CFD209C9)]
+interface ncIChangeListener 
+	: nsISupports
+{
+	/**
+	 * 云端目录创建事件
+	 *
+	 * @param docId:				文档docId
+	 * @param relPath:				文档路径（相对路径）
+	 * @param otag:					文档变化标识
+	 * @param docType:				文档类型
+	 * @param typeName:				文档类型名称
+	 * @param viewType:				视图类型
+	 * @param viewName:				视图类型名称
+	 * @param mtime:				文档最近修改时间
+	 * @param attr:					文档属性
+	 * @param isDelay:				是否延迟下载
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnSvrDirCreated (in ncTaskSrc taskSrc,
+									 [const] in StringRef docId,
+									 [const] in StringRef relPath,
+									 [const] in StringRef otag,
+									 in int docType,
+									 [const] in StringRef typeName,
+									 in int viewType,
+									 [const] in StringRef viewName,
+									 in int64 mtime,
+									 in int attr,
+									 in bool isDelay,
+									 [const] in StringRef lcoalPath);
+
+	/**
+	 * 云端目录删除事件
+	 *
+	 * @param relPath:				文档路径（相对路径）
+	 * @param isDelay:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnSvrDirDeleted (in ncTaskSrc taskSrc, 
+									 [const] in StringRef relPath,
+									 [const] in StringRef lcoalPath);
+
+	/**
+	 * 云端目录重命名事件
+	 *
+	 * @param relPath:				文档原路径（相对路径）
+	 * @param newRelPath:			文档新路径（相对路径）
+	 * @param isDelay:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnSvrDirRenamed (in ncTaskSrc taskSrc, 
+									 [const] in StringRef relPath, 
+									 [const] in StringRef newRelPath,
+									 [const] in StringRef lcoalPath);
+
+	/**
+	 * 云端文件编辑事件
+	 *
+	 * @param docId:				文档docId
+	 * @param relPath:				文档路径（相对路径）
+	 * @param otag:					文档变化标识
+	 * @param docType:				文档类型
+	 * @param typeName:				文档类型名称
+	 * @param viewType:				视图类型
+	 * @param viewName:				视图类型名称
+	 * @param mtime:				文件最近修改时间
+	 * @param size:					文件大小
+	 * @param attr:					文档属性
+	 * @param isDelay:				是否延迟下载
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 * @param isAuto:				是否为自动下载任务
+	 */
+	[notxpcom] void OnSvrFileEdited (in ncTaskSrc taskSrc,
+									 [const] in StringRef docId,
+									 [const] in StringRef relPath,
+									 [const] in StringRef otag,
+									 in int docType,
+									 [const] in StringRef typeName,
+									 in int viewType,
+									 [const] in StringRef viewName,
+									 in int64 mtime,
+									 in int64 size,
+									 in int attr,
+									 in bool isDelay,
+									 [const] in StringRef lcoalPath,
+									 in bool isAuto);
+
+	/**
+	 * 云端文件删除事件
+	 *
+	 * @param relPath:				文档路径（相对路径）
+	 * @param isDelay:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnSvrFileDeleted (in ncTaskSrc taskSrc,
+									  [const] in StringRef relPath,
+									  [const] in StringRef lcoalPath);
+
+	/**
+	 * 云端文件重命名事件
+	 *
+	 * @param relPath:				文档原路径（相对路径）
+	 * @param newRelPath:			文档新路径（相对路径）
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnSvrFileRenamed (in ncTaskSrc taskSrc,
+									  [const] in StringRef relPath, 
+									  [const] in StringRef newRelPath,
+									  [const] in StringRef lcoalPath);
+
+	/**
+	 * 云端变化标识修改事件
+	 *
+	 * @param relPath:				文档路径（相对路径）
+	 * @param otag:					文档新变化标识
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnSvrOtagUpdated (in ncTaskSrc taskSrc,
+									  [const] in StringRef relPath, 
+									  [const] in StringRef otag,
+									  [const] in StringRef lcoalPath);
+
+	/**
+	 * 云端文件夹修改时间修改事件
+	 *
+	 * @param relPath:				文档路径（相对路径）
+	 * @param mtime:				文档最近修改时间
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnSvrDirModifyTimeUpdated (in ncTaskSrc taskSrc,
+											   [const] in StringRef relPath, 
+											   in int64 mtime,
+											   [const] in StringRef lcoalPath);
+
+	/**
+	 * 云端文档属性修改事件
+	 *
+	 * @param relPath:				文档路径（相对路径）
+	 * @param attr:					文档新属性
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnSvrAttrUpdated (in ncTaskSrc taskSrc,
+									  [const] in StringRef relPath, 
+									  in int attr,
+									  [const] in StringRef lcoalPath);
+
+	/**
+	 * 云端类型名称变化事件
+	 *
+	 * @param relPath:				文档路径（相对路径）
+	 * @param typeName:				文档新类型名
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnSvrTypeNameUpdated (in ncTaskSrc taskSrc,
+										  [const] in StringRef relPath, 
+										  [const] in StringRef typeName,
+										  [const] in StringRef lcoalPath);
+
+	/**
+	 * 云端延迟下载标记修改事件
+	 *
+	 * @param relPath:				文档路径（相对路径）
+	 * @param isDelay:				文档新延迟下载标记
+	 */
+	[notxpcom] void OnSvrDelayUpdated (in ncTaskSrc taskSrc,
+									   [const] in StringRef relPath, 
+									   in bool isDelay,
+									   [const] in StringRef lcoalPath);
+
+	/**
+	 * 本地目录创建事件
+	 *
+	 * @param path:					文档路径（绝对路径）
+	 */
+	[notxpcom] void OnLocalDirCreated (in ncTaskSrc taskSrc,
+									   [const] in StringRef path,
+									   [const] in StringRef lcoalPath);
+
+	/**
+	 * 本地目录删除事件
+	 *
+	 * @param path:					文档路径（绝对路径）
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnLocalDirDeleted (in ncTaskSrc taskSrc,
+									   [const] in StringRef path,
+									   [const] in StringRef lcoalPath);
+
+	/**
+	 * 本地目录重命名事件
+	 *
+	 * @param path:					文档原路径（绝对路径）
+	 * @param newPath:				文档新路径（绝对路径）
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnLocalDirRenamed (in ncTaskSrc taskSrc,
+									   [const] in StringRef path, 
+									   [const] in StringRef newPath,
+									   [const] in StringRef lcoalPath);
+
+	/**
+	 * 本地文件编辑事件
+	 *
+	 * @param path:					文档路径（绝对路径）
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnLocalFileEdited (in ncTaskSrc taskSrc,
+									   [const] in StringRef path,
+									   [const] in StringRef lcoalPath);
+
+	/**
+	 * 本地文件删除事件
+	 *
+	 * @param path:					文档路径（绝对路径）
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnLocalFileDeleted (in ncTaskSrc taskSrc,
+										[const] in StringRef path,
+										[const] in StringRef lcoalPath);
+
+	/**
+	 * 本地文件重命名事件
+	 *
+	 * @param path:					文档路径（绝对路径）
+	 * @param newPath:				文档新路径（绝对路径）
+	 * @param lcoalPath:				本地同步根路径，缓存目录同步则为空
+	 */
+	[notxpcom] void OnLocalFileRenamed (in ncTaskSrc taskSrc,
+										[const] in StringRef path, 
+										[const] in StringRef newPath,
+										[const] in StringRef lcoalPath);
+
+}; // End interface ncIChangeListener

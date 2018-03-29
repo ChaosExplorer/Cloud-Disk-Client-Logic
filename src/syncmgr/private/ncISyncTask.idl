@@ -1,0 +1,82 @@
+/***************************************************************************************************
+Purpose:
+	同步任务接口文件。
+
+Author:
+	Chaos
+
+Created Time:
+	2016-8-18
+***************************************************************************************************/
+
+#include "nsISupports.idl"
+
+native bool (bool);
+native ncTaskType (ncTaskType);
+[ref] native StringRef (String);
+[ref] native ncTaskDetailRef (ncTaskDetail);
+
+%{ C++
+
+#include <syncmgr/public/ncISyncScheduler.h>
+
+enum ncTaskSrc {
+	NC_TS_UNKNOW = 0,
+	NC_TS_MONIT = 1, 
+	NC_TS_DETECT = 2,
+	NC_TS_SCAN = 3,
+	NC_TS_REQUEST = 4,
+	NC_TS_ERROR = 5,
+};
+
+%}
+
+[uuid(B0415615-146D-498f-B456-F8006421B405)]
+interface ncISyncTask : nsISupports
+{
+	/**
+	 * 获取任务类型
+	 */
+	[notxpcom] ncTaskType GetTaskType ();
+
+	/**
+	 * 获取任务路径（相对路径）
+	 *
+	 * @param relPath:				任务自身路径（相对路径）
+	 * @param relPathEx:			任务关联路径（相对路径）
+	 */
+	[notxpcom] void GetTaskPath (in StringRef relPath, in StringRef relPathEx);
+
+	/**
+	 * 获取任务详情（如果是不可见任务则返回false）
+	 *
+	 * @param detail:				任务详情
+	 */
+	[notxpcom] bool GetDetail (in ncTaskDetailRef detail);
+
+	/**
+	 * 提交任务调度
+	 */
+	[notxpcom] void OnSchedule ();
+
+	/**
+	 * 解除任务调度
+	 */
+	[notxpcom] void OnUnSchedule ();
+
+	/**
+	 * 执行任务
+	 */
+	[notxpcom] void Execute ();
+
+	/**
+	 * 暂停任务
+	 */
+	[notxpcom] void Pause ();
+
+	/**
+	 * 恢复任务
+	 */
+	[notxpcom] void Resume ();
+
+}; // End interface ncISyncTask
