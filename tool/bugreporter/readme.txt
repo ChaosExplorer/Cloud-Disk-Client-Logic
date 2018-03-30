@@ -1,9 +1,9 @@
-¿Í»§¶ËÎÊÌâÐÅÏ¢ÊÕ¼¯¹¤¾ß  v1.0.0.1
+å®¢æˆ·ç«¯é—®é¢˜ä¿¡æ¯æ”¶é›†å·¥å…·  v1.0.0.1
 
 
 
-1£©makec -DCMAKE_BUILD_TYPE=Release±àÒëÉú³Érelease°æ±¾exeºó·ÅÈëlibÖÐ,i386Óëx64°æ±¾
+1ï¼‰æ”¶é›†æ“ä½œç³»ç»Ÿè¿è¡ŒçŽ¯å¢ƒä¿¡æ¯
 
-2) ¶ÁÐ´ÎÄ¼þ·¢Éú´íÎóÇë¼ì²éÓÃ»§È¨ÏÞ
+2) å¼€å¯å¹¶æ”¶é›†å®¢æˆ·ç«¯Traceæ—¥å¿—ä¸Žç³»ç»Ÿeventlog
 
-3£©Ä¿Ç°ÐèÔÚ¿Í»§¶Ë°²×°Ä¿Â¼ÏÂÔËÐÐ
+3ï¼‰æ”¶é›†ç¨‹åºå´©æºƒæ—¶dump
